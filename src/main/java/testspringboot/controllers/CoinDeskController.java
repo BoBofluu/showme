@@ -14,13 +14,27 @@ public class CoinDeskController {
 
 	private CoinDeskService callCoinDeskApiService;
 	
+	/**
+	 * 建構子
+	 * @param callCoinDeskApiService
+	 */
 	// 右鍵 Source Generate Constructor using Fields
 	public CoinDeskController(CoinDeskService callCoinDeskApiService) {
 		this.callCoinDeskApiService = callCoinDeskApiService;
 	}
 
+	/**
+	 * 取得幣別資訊(中文, 英文, 匯率, 時間)
+	 * 
+	 * @return
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 */
 	@GetMapping("/send")
-	public String sendCoinDesk() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public String sendCoinDesk() {
 		return callCoinDeskApiService.sendCoinDesk();
 	}
 

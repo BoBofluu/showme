@@ -36,10 +36,9 @@ public class CoinDeskService {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public final DateFormat fullDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
 	/**
-	 * 呼叫API
+	 * 呼叫外部API
 	 * 
 	 * @return API values
 	 */
@@ -49,7 +48,7 @@ public class CoinDeskService {
 	}
 
 	/**
-	 * 提供回傳值
+	 * 取得幣別資訊(中文, 英文, 匯率, 時間)
 	 * 
 	 * @return
 	 * @throws InvocationTargetException 
@@ -60,7 +59,7 @@ public class CoinDeskService {
 	 * @throws JsonProcessingException
 	 * @throws JsonMappingException
 	 */
-	public String sendCoinDesk() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public String sendCoinDesk() {
 		CoinDeskApiResponse coinDeskResponse = null;
 		try {
 			coinDeskResponse = objectMapper.readValue(callCoinDesk(), CoinDeskApiResponse.class);
@@ -70,7 +69,7 @@ public class CoinDeskService {
 			e.printStackTrace();
 		}
 
-//		Time convertTime = convertTime(coinDeskResponse);
+		Time convertTime = convertTime(coinDeskResponse);
 		BpiInfo convertBpi = convertBpi(coinDeskResponse);
 		System.out.println("");
 		return "";
@@ -88,6 +87,8 @@ public class CoinDeskService {
 		Date convertUpdated = null;
 		Date convertUpdatedISO = null;
 		Date convertUpdateduk = null;
+		
+		DateFormat fullDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss z");
 
 		try {
 			convertUpdated = fullDateFormat.parse(time.getUpdated());
@@ -105,7 +106,7 @@ public class CoinDeskService {
 	}
 
 	/**
-	 * 取得中文幣別
+	 * 將中文幣別組成
 	 * 
 	 * @param coinDeskApiResponse
 	 * @return
@@ -115,44 +116,54 @@ public class CoinDeskService {
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 */
-	private BpiInfo convertBpi(CoinDeskApiResponse coinDeskApiResponse) throws NoSuchMethodException, SecurityException,
-			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		Bpi bpi = coinDeskApiResponse.getBpi();
-
+	private BpiInfo convertBpi(CoinDeskApiResponse coinDeskApiResponse) {
 		// 取得原始幣別資訊
+		Bpi bpi = coinDeskApiResponse.getBpi();
+		// 欲回傳的幣別資訊
 		BpiInfo bpiInfo = new BpiInfo();
 
-//		Map<String, Object> map = objectMapper.convertValue(bpi, Map.class);
-		Map<String, BpiDesc> map = objectMapper.convertValue(bpi, new TypeReference<Map<String, BpiDesc>>() {
-		});
+		Map<String, BpiDesc> map = objectMapper.convertValue(bpi, new TypeReference<Map<String, BpiDesc>>() {});
+		// 將原始幣別資訊映射至回傳資訊
 		for (String currency : map.keySet()) {
 			String first = currency.substring(0,1);
 			String last = currency.substring(1).toLowerCase();
+			try {
+				// 原始幣別內部資料
+				BpiDesc bpiDesc = map.get(currency);
+				// 回傳幣別內部資料
+				BpiInfoDesc bpiInfoDesc = new BpiInfoDesc();
+				
+				bpiInfoDesc.setCode(bpiDesc.getCode());
+				bpiInfoDesc.setRate(bpiDesc.getRate());
+				// 反射, set需傳入資料型態
+				Method setBpiInfoFieldMethod = bpiInfo.getClass().getMethod("set" + first + last, BpiInfoDesc.class);
+				// 將 幣別內部資料 反射至 欲回傳的幣別資訊
+				setBpiInfoFieldMethod.invoke(bpiInfo, bpiInfoDesc);
+			} catch (Exception e) {
+				
+			}
+		} // end for
 
-			BpiDesc bpiDesc = map.get(currency);
-			BpiInfoDesc bpiInfoDesc = new BpiInfoDesc();
-			bpiInfoDesc.setCode(bpiDesc.getCode());
-			bpiInfoDesc.setRate(bpiDesc.getRate());
-			Method setBpiInfoFieldMethod = bpiInfo.getClass().getMethod("set" + first + last, BpiInfoDesc.class);
-			setBpiInfoFieldMethod.invoke(bpiInfo, bpiInfoDesc);
-		}
-
-		// 取得中文幣別資訊
+		// 從DB取得中文幣別資訊
 		SelectCurrencyResponse selectCurrencyResponse = currencyService.selectCurrencyName();
 		List<SelectCurrencyInfo> selectCurrencyInfoList = selectCurrencyResponse.getSelectCurrencyInfoList();
 
-		// field[] field
+		// Field[] field
 		for (SelectCurrencyInfo selectCurrencyInfo : selectCurrencyInfoList) {
 			String first = selectCurrencyInfo.getCurrencyId().substring(0,1);
 			String last = selectCurrencyInfo.getCurrencyId().substring(1).toLowerCase();
 			try {
-				Method bpiInfoFieldMethod = bpiInfo.getClass().getMethod("get" + first + last);
-				BpiInfoDesc bpiInfoDesc = (BpiInfoDesc) bpiInfoFieldMethod.invoke(bpiInfo);
+				// 反射, get不需傳入資料型態
+				Method getBpiInfoFieldMethod = bpiInfo.getClass().getMethod("get" + first + last);
+				// 將 幣別內部資料 從 欲回傳的幣別資訊 反射出來
+				BpiInfoDesc bpiInfoDesc = (BpiInfoDesc) getBpiInfoFieldMethod.invoke(bpiInfo);
+				// 將反射出的幣別內部資料 設定 中文幣別
 				bpiInfoDesc.setDescription(selectCurrencyInfo.getCurrencyName());
 			} catch (Exception e) {
-				// TODO: handle exception
+				
 			}
-		}
+		} // end for
+		
 		return bpiInfo;
 	}
 }
