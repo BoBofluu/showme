@@ -12,6 +12,7 @@ import org.springdoc.core.customizers.OpenApiCustomiser;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
+import testspringboot.controllers.advice.ErrorResponse;
 
 import java.util.Map;
 
@@ -19,7 +20,7 @@ import java.util.Map;
         info = @Info(
                 title = "什麼豬豬忘了",
                 description = "功能再想想",
-                contact = @Contact(name = "浩兒", url = "shakingbabygg@gmail.com")
+                contact = @Contact(name = "浩兒")
         ),
         servers = {@Server(description = "local", url = "http://localhost:8080/testSpringboot")}
 )
@@ -37,6 +38,8 @@ public class SwaggerConfig {
             openApi.getPaths().values().forEach(pathItem -> pathItem.readOperations().forEach(operation -> {
                 ApiResponses apiResponses = operation.getResponses();
                 // 此處可以設置異常處理回傳
+                apiResponses.addApiResponse("400", getApiResponse("通用異常處理", ErrorResponse.class));
+                apiResponses.addApiResponse("403", getApiResponse("通用權限異常處理", ErrorResponse.class));
             }));
         };
 
