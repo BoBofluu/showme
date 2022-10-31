@@ -57,7 +57,7 @@ public class SwaggerConfig {
 
     private Schema<?> getSchema(Class<?> clazz) {
         Schema<?> schema = new Schema<>();
-        schema.set$ref(String.format("#/components/schema/%s", clazz.getSimpleName()));
+        schema.set$ref(String.format("#/components/schemas/%s", clazz.getSimpleName()));
         return schema;
     }
 }
