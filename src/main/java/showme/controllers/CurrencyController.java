@@ -17,7 +17,7 @@ import showme.services.CurrencyService;
 public class CurrencyController {
 
     @Autowired
-    CurrencyService currencyService;
+    private CurrencyService currencyService;
 
     @PostMapping("/insert")
     @Operation(summary = "新增幣別中文說明進資料庫")
