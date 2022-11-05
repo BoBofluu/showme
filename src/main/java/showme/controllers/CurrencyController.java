@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import showme.models.api.Request;
 import showme.models.api.currency.InsertCurrencyRequst;
 import showme.models.api.currency.InsertCurrencyResponse;
 import showme.services.CurrencyService;
@@ -21,8 +22,8 @@ public class CurrencyController {
 
     @PostMapping("/insert")
     @Operation(summary = "新增幣別中文說明進資料庫")
-    public InsertCurrencyResponse insertCurrency(@RequestBody InsertCurrencyRequst insertCurrencyRequst) {
-        return currencyService.insertCurrencyName(insertCurrencyRequst);
+    public InsertCurrencyResponse insertCurrency(@RequestBody Request<InsertCurrencyRequst> dat) {
+        return currencyService.insertCurrencyName(dat.getData());
     }
 
     public void updateCurrency() {
