@@ -9,7 +9,6 @@ public class Request<T> {
 
     private T data;
 
-    private String browserVersion;
 
     public boolean isValidate() {
         return false;
