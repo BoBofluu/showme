@@ -60,10 +60,10 @@ public class CoinDeskService {
             e.printStackTrace();
         }
 
-        Time convertTime = convertTime(coinDeskResponse);
-        BpiInfo convertBpi = convertBpi(coinDeskResponse);
-        System.out.println("");
-        return "";
+//        Time convertTime = convertTime(coinDeskResponse);
+//        BpiInfo convertBpi = convertBpi(coinDeskResponse);
+        System.out.println("成功");
+        return "成功";
     }
 
     /**
