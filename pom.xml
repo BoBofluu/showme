@@ -7,8 +7,8 @@
         <version>2.6.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>testSpringboot</groupId>
-    <artifactId>testSpringboot</artifactId>
+    <groupId>showme</groupId>
+    <artifactId>showme</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>springboot</name>
