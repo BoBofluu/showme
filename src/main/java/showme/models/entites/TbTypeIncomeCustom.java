@@ -1,5 +1,4 @@
-package testspringboot.models.entites;
-
+package showme.models.entites;
 
 
 import javax.persistence.Column;
@@ -11,32 +10,33 @@ import java.io.Serializable;
 import lombok.*;
 
 /**
- * @Description  
- * @Author  zhulei
- * @Date 2022-11-01 
+ * @Description
+ * @Author zhulei
+ * @Date 2022-11-01
  */
 
 @Entity
-@Table ( name ="tb_type_income_custom" )
+@Table(name = "tb_type_income_custom")
 @Getter
 @Setter
-public class TbTypeIncomeCustom  implements Serializable {
+public class TbTypeIncomeCustom implements Serializable {
 
-	private static final long serialVersionUID =  5382309652566852245L;
+    private static final long serialVersionUID = 5382309652566852245L;
 
-   	@Column(name = "type_id" )
-	private Long typeId;
-	@Id
-   	@Column(name = "type_name" )
-	private String typeName;
+    @Column(name = "type_id")
+    private Long typeId;
 
-   	@Column(name = "type_seq" )
-	private Long typeSeq;
+    @Id
+    @Column(name = "type_name")
+    private String typeName;
 
-   	@Column(name = "type_color" )
-	private String typeColor;
+    @Column(name = "type_seq")
+    private Long typeSeq;
 
-   	@Column(name = "user_id" )
-	private String userId;
+    @Column(name = "type_color")
+    private String typeColor;
+
+    @Column(name = "user_id")
+    private String userId;
 
 }

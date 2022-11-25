@@ -1,23 +1,23 @@
 package showme.models.api;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 import org.apache.logging.log4j.util.Strings;
 
 import java.io.Serializable;
 
-@Getter
-@Setter
-@ToString
+@Data
+@Builder
 public class Responses<T> implements Serializable {
 
     private T data;
 
-    private String RsCode;
+    private String rsCode;
 
-    private String RsMessage;
+    @JsonProperty("RsMessage")
+    private String rsMessage;
 
-    private String Title = Strings.EMPTY;
+    @JsonProperty("Title")
+    private String title = Strings.EMPTY;
 
 }

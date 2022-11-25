@@ -9,7 +9,6 @@ public class Request<T> {
 
     private T data;
 
-
     public boolean isValidate() {
         return false;
     }

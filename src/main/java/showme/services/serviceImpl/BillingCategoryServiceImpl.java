@@ -12,14 +12,12 @@ import java.util.List;
 @Service
 public class BillingCategoryServiceImpl implements BillingCategoryService {
 
-
     @Autowired
-    TbTypePayRepository tbTypePayRepository;
-
+    private TbTypePayRepository tbTypePayRepository;
 
     @Override
     public List<TbTypePay> getInitType() {
         List<TbTypePay> typePayList = tbTypePayRepository.findAll();
-        return typePayList ;
+        return typePayList;
     }
 }

@@ -1,4 +1,4 @@
-package testspringboot.models.entites;
+package showme.models.entites;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,10 +11,10 @@ import java.io.Serializable;
 import java.sql.Date;
 
 @Entity
-@Table( name ="tb_user" )
+@Table(name = "tb_user")
 @Getter
 @Setter
-public class TbUser  implements Serializable {
+public class TbUser implements Serializable {
 
     private static final long serialVersionUID = 1559005131803490305L;
     @Id

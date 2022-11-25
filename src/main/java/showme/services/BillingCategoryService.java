@@ -8,5 +8,5 @@ import java.util.List;
 @Service
 public interface BillingCategoryService {
 
-    public List<TbTypePay> getInitType();
+    List<TbTypePay> getInitType();
 }
