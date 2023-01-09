@@ -20,4 +20,7 @@ public class BillingCategoryServiceImpl implements BillingCategoryService {
         List<TbTypePay> typePayList = tbTypePayRepository.findAll();
         return typePayList;
     }
+
+//     RestTemplate restTemplate = new RestTemplate();
+//        return restTemplate.getForObject("https://api.coindesk.com/v1/bpi/currentprice.json", String.class);
 }

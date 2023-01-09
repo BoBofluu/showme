@@ -3,7 +3,6 @@ package showme.services;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import showme.controllers.CurrencyController;
 import showme.models.api.currency.InsertCurrencyRequst;
 import showme.models.api.currency.InsertCurrencyResponse;
 
