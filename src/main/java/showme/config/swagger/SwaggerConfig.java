@@ -18,7 +18,7 @@ import java.util.Map;
 
 @OpenAPIDefinition(
         info = @Info(
-                title = "什麼豬豬忘了",
+                title = "咻咪",
                 description = "功能再想想",
                 contact = @Contact(name = "浩兒")
         ),
