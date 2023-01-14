@@ -2,9 +2,9 @@ package showme.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import showme.models.entites.TbTypePay;
+import showme.models.entites.UserInfo;
 
 @Repository
-public interface TbTypePayRepository extends JpaRepository<TbTypePay, String> {
+public interface UserInfoRepository extends JpaRepository<UserInfo, String> {
 
 }
