@@ -2,8 +2,8 @@ package showme.services.entityManager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -18,7 +18,9 @@ public class JpaEntityManager {
     @PersistenceContext
     private EntityManager entityManager;
 
-    private static final Logger logger = LoggerFactory.getLogger(JpaEntityManager.class);
+    private static final Logger logger = LogManager.getLogger(JpaEntityManager.class);
+
+
     private static final Gson gson;
 
     static {
@@ -35,7 +37,7 @@ public class JpaEntityManager {
      * @param sqlSb sql語法
      * @return List
      */
-    private List getData(StringBuilder sqlSb) {
+    public List getData(StringBuilder sqlSb) {
         List result = null;
         try {
             String sqlStr = sbToStr(sqlSb);
@@ -54,7 +56,7 @@ public class JpaEntityManager {
      * @param parameterMap 對應的參數
      * @return List
      */
-    private List getData(StringBuilder sqlSb, HashMap<String, Object> parameterMap) {
+    public List getData(StringBuilder sqlSb, HashMap<String, Object> parameterMap) {
         List result = null;
         try {
             String sqlStr = sbToStr(sqlSb);
@@ -80,7 +82,7 @@ public class JpaEntityManager {
      * @param clazz        要轉出去的物件
      * @return List
      */
-    private <T> T getData(StringBuilder sqlSb, HashMap<String, Object> parameterMap, Class<T> clazz) {
+    public <T> T getData(StringBuilder sqlSb, HashMap<String, Object> parameterMap, Class<T> clazz) {
         T result = null;
 
         try {
