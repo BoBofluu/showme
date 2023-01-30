@@ -1,25 +1,30 @@
 package showme.services.serviceImpl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import showme.services.BillingCategoryService;
+import showme.services.entityManager.JpaEntityManager;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
 @Service
 public class BillingCategoryServiceImpl implements BillingCategoryService {
 
-//    @Autowired
-//    private TbTypePayRepository tbTypePayRepository;
-//
-//    @Override
-//    public List<TbTypePay> getInitType() {
-//        List<TbTypePay> typePayList = tbTypePayRepository.findAll();
-//        return typePayList;
-//    }
 
-//     RestTemplate restTemplate = new RestTemplate();
-//        return restTemplate.getForObject("https://api.coindesk.com/v1/bpi/currentprice.json", String.class);
+    private JpaEntityManager jpaEntityManager;
+
+    public BillingCategoryServiceImpl(JpaEntityManager jpaEntityManager) {
+        this.jpaEntityManager = jpaEntityManager;
+    }
+
+
+    @Override
+    public List<Object> getInitType() {
+         return new ArrayList<>();
+    }
+
+
+
 }
