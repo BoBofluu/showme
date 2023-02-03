@@ -4,7 +4,6 @@ package showme.controllers;
 import com.theokanning.openai.completion.CompletionChoice;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSet;
 import org.springframework.web.bind.annotation.*;
 import showme.models.entites.AccountTypeCus;
 import showme.openAi.OpenAiUtils;
@@ -25,6 +24,9 @@ public class ExampleController {
 
     @Autowired
     private BaseAppDAOImpl baseAppDAOImpl;
+
+    @Autowired
+    private OpenAiUtils openAiUtils;
 
 
     /**
@@ -79,19 +81,19 @@ public class ExampleController {
         System.out.printf("chooseModel: %s \n starting...\n question: %s \n", model, question);
         switch (model) {
             case "Question":
-                answer = OpenAiUtils.getQuestionAnswer(question);
+                answer = openAiUtils.getQuestionAnswer(question);
                 answerStr = answer.get(0).getText().replaceAll("\\r\\n", " ");
                 break;
             case "Conversation":
-                answer = OpenAiUtils.getFriendChat(question);
+                answer = openAiUtils.getFriendChat(question);
                 answerStr = answer.get(0).getText().replaceAll("\\r\\n", " ");
                 break;
             case "CreatStory":
-                answer = OpenAiUtils.getStory(question);
+                answer = openAiUtils.getStory(question);
                 answerStr = answer.get(0).getText().replaceAll("\\r\\n", " ");
                 break;
             case "WhiteEyeChat":
-                answer = OpenAiUtils.getMarvChatbot(question);
+                answer = openAiUtils.getMarvChatbot(question);
                 answerStr = answer.get(0).getText().replaceAll("\\r\\n", " ");
                 break;
             default:

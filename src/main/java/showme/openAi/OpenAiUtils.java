@@ -5,14 +5,22 @@ import com.theokanning.openai.OpenAiService;
 import com.theokanning.openai.completion.CompletionChoice;
 import com.theokanning.openai.completion.CompletionRequest;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.*;
 
 /**
  * CallOpenAi49Methods
  */
-
+@Configuration
 public class OpenAiUtils {
+
+
+    @Autowired
+    private OpenAiCommon openAiCommon;
+
+
     public static final Map<String, OpenAi> PARMS = new HashMap<>();
 
     static {
@@ -68,8 +76,6 @@ public class OpenAiUtils {
     }
 
 
-
-
     /**
      * 获取ai
      *
@@ -77,9 +83,10 @@ public class OpenAiUtils {
      * @param prompt question
      * @return List<CompletionChoice>
      */
-    public static List<CompletionChoice> getAiResult(OpenAi openAi, String prompt) {
-        String OPENAPI_TOKEN = "";
-        OpenAiService service = new OpenAiService(OPENAPI_TOKEN);
+    public List<CompletionChoice> getAiResult(OpenAi openAi, String prompt) {
+        String commonToken = openAiCommon.getApiUserKey();
+
+        OpenAiService service = new OpenAiService(commonToken);
         CompletionRequest.CompletionRequestBuilder builder = CompletionRequest.builder()
                 .model(openAi.getModel())
                 .prompt(prompt)
@@ -101,7 +108,7 @@ public class OpenAiUtils {
      * @param question question
      * @return List<CompletionChoice>
      */
-    public static List<CompletionChoice> getQuestionAnswer(String question) {
+    public List<CompletionChoice> getQuestionAnswer(String question) {
         OpenAi openAi = PARMS.get("OpenAi01");
         return getAiResult(openAi, String.format(openAi.getPrompt(), question));
     }
@@ -112,7 +119,7 @@ public class OpenAiUtils {
      * @param text question
      * @return List<CompletionChoice>
      */
-    public static List<CompletionChoice> getGrammarCorrection(String text) {
+    public List<CompletionChoice> getGrammarCorrection(String text) {
         OpenAi openAi = PARMS.get("OpenAi02");
         return getAiResult(openAi, String.format(openAi.getPrompt(), text));
     }
@@ -123,7 +130,7 @@ public class OpenAiUtils {
      * @param text question
      * @return List<CompletionChoice>
      */
-    public static List<CompletionChoice> getSummarize(String text) {
+    public List<CompletionChoice> getSummarize(String text) {
         OpenAi openAi = PARMS.get("OpenAi03");
         return getAiResult(openAi, String.format(openAi.getPrompt(), text));
     }
@@ -134,7 +141,7 @@ public class OpenAiUtils {
      * @param text question
      * @return List<CompletionChoice>
      */
-    public static List<CompletionChoice> getOpenAiApi(String text) {
+    public List<CompletionChoice> getOpenAiApi(String text) {
         OpenAi openAi = PARMS.get("OpenAi04");
         return getAiResult(openAi, String.format(openAi.getPrompt(), text));
     }
@@ -145,7 +152,7 @@ public class OpenAiUtils {
      * @param text question
      * @return List<CompletionChoice>
      */
-    public static List<CompletionChoice> getTextToCommand(String text) {
+    public List<CompletionChoice> getTextToCommand(String text) {
         OpenAi openAi = PARMS.get("OpenAi05");
         return getAiResult(openAi, String.format(openAi.getPrompt(), text));
     }
@@ -156,7 +163,7 @@ public class OpenAiUtils {
      * @param text question
      * @return List<CompletionChoice>
      */
-    public static List<CompletionChoice> getTranslatesLanguages(String text, String translatesLanguages) {
+    public List<CompletionChoice> getTranslatesLanguages(String text, String translatesLanguages) {
         if (StringUtils.isEmpty(translatesLanguages)) {
             translatesLanguages = "  1. French, 2. Spanish and 3. English";
         }
@@ -170,7 +177,7 @@ public class OpenAiUtils {
      * @param text question
      * @return List<CompletionChoice>
      */
-    public static List<CompletionChoice> getStripeApi(String text) {
+    public List<CompletionChoice> getStripeApi(String text) {
         OpenAi openAi = PARMS.get("OpenAi07");
         return getAiResult(openAi, String.format(openAi.getPrompt(), text));
     }
@@ -185,7 +192,7 @@ public class OpenAiUtils {
      * @param sqlType      sql类型，比如SELECT
      * @return
      */
-    public static List<CompletionChoice> getStripeApi(String databaseType, List<String> tables, String text, String sqlType) {
+    public List<CompletionChoice> getStripeApi(String databaseType, List<String> tables, String text, String sqlType) {
         OpenAi openAi = PARMS.get("OpenAi08");
         StringJoiner joiner = new StringJoiner("\n");
         for (int i = 0; i < tables.size(); i++) {
@@ -200,7 +207,7 @@ public class OpenAiUtils {
      * @param text 非结构化的数据
      * @return
      */
-    public static List<CompletionChoice> getUnstructuredData(String text) {
+    public List<CompletionChoice> getUnstructuredData(String text) {
         OpenAi openAi = PARMS.get("OpenAi09");
         return getAiResult(openAi, String.format(openAi.getPrompt(), text));
     }
@@ -211,7 +218,7 @@ public class OpenAiUtils {
      * @param text 要分类的文本
      * @return
      */
-    public static List<CompletionChoice> getTextCategory(String text) {
+    public List<CompletionChoice> getTextCategory(String text) {
         OpenAi openAi = PARMS.get("OpenAi10");
         return getAiResult(openAi, String.format(openAi.getPrompt(), text));
     }
@@ -223,7 +230,7 @@ public class OpenAiUtils {
      * @param code     要解释的代码
      * @return
      */
-    public static List<CompletionChoice> getCodeExplain(String codeType, String code) {
+    public List<CompletionChoice> getCodeExplain(String codeType, String code) {
         OpenAi openAi = PARMS.get("OpenAi11");
         return getAiResult(openAi, String.format(openAi.getPrompt(), codeType, code));
     }
@@ -234,7 +241,7 @@ public class OpenAiUtils {
      * @param text 文本
      * @return
      */
-    public static List<CompletionChoice> getTextEmoji(String text) {
+    public List<CompletionChoice> getTextEmoji(String text) {
         OpenAi openAi = PARMS.get("OpenAi12");
         return getAiResult(openAi, String.format(openAi.getPrompt(), text));
     }
@@ -245,7 +252,7 @@ public class OpenAiUtils {
      * @param code 代码
      * @return
      */
-    public static List<CompletionChoice> getTimeComplexity(String code) {
+    public List<CompletionChoice> getTimeComplexity(String code) {
         OpenAi openAi = PARMS.get("OpenAi13");
         return getAiResult(openAi, String.format(openAi.getPrompt(), code));
     }
@@ -259,7 +266,7 @@ public class OpenAiUtils {
      * @param code         代码
      * @return
      */
-    public static List<CompletionChoice> getTranslateProgramming(String fromLanguage, String toLanguage, String code) {
+    public List<CompletionChoice> getTranslateProgramming(String fromLanguage, String toLanguage, String code) {
         OpenAi openAi = PARMS.get("OpenAi14");
         return getAiResult(openAi, String.format(openAi.getPrompt(), fromLanguage, toLanguage, fromLanguage, code, toLanguage));
     }
@@ -270,7 +277,7 @@ public class OpenAiUtils {
      * @param texts 文本
      * @return
      */
-    public static List<CompletionChoice> getBatchTweetClassifier(List<String> texts) {
+    public List<CompletionChoice> getBatchTweetClassifier(List<String> texts) {
         OpenAi openAi = PARMS.get("OpenAi15");
         StringJoiner stringJoiner = new StringJoiner("\n");
         for (int i = 0; i < texts.size(); i++) {
@@ -285,7 +292,7 @@ public class OpenAiUtils {
      * @param code 文本
      * @return
      */
-    public static List<CompletionChoice> getExplainCOde(String code) {
+    public List<CompletionChoice> getExplainCOde(String code) {
         OpenAi openAi = PARMS.get("OpenAi16");
         return getAiResult(openAi, String.format(openAi.getPrompt(), code));
     }
@@ -296,7 +303,7 @@ public class OpenAiUtils {
      * @param text 文本
      * @return
      */
-    public static List<CompletionChoice> getTextKeywords(String text) {
+    public List<CompletionChoice> getTextKeywords(String text) {
         OpenAi openAi = PARMS.get("OpenAi17");
         return getAiResult(openAi, String.format(openAi.getPrompt(), text));
     }
@@ -307,7 +314,7 @@ public class OpenAiUtils {
      * @param text 文本
      * @return
      */
-    public static List<CompletionChoice> getFactualAnswering(String text) {
+    public List<CompletionChoice> getFactualAnswering(String text) {
         OpenAi openAi = PARMS.get("OpenAi18");
         return getAiResult(openAi, String.format(openAi.getPrompt(), text));
     }
@@ -318,7 +325,7 @@ public class OpenAiUtils {
      * @param text 文本
      * @return
      */
-    public static List<CompletionChoice> getAd(String text) {
+    public List<CompletionChoice> getAd(String text) {
         OpenAi openAi = PARMS.get("OpenAi19");
         return getAiResult(openAi, String.format(openAi.getPrompt(), text));
     }
@@ -330,7 +337,7 @@ public class OpenAiUtils {
      * @param seedWords          种子词语
      * @return
      */
-    public static List<CompletionChoice> getProductName(String productDescription, String seedWords) {
+    public List<CompletionChoice> getProductName(String productDescription, String seedWords) {
         OpenAi openAi = PARMS.get("OpenAi20");
         return getAiResult(openAi, String.format(openAi.getPrompt(), productDescription, seedWords));
     }
@@ -341,7 +348,7 @@ public class OpenAiUtils {
      * @param text 长句子
      * @return
      */
-    public static List<CompletionChoice> getProductName(String text) {
+    public List<CompletionChoice> getProductName(String text) {
         OpenAi openAi = PARMS.get("OpenAi21");
         return getAiResult(openAi, String.format(openAi.getPrompt(), text));
     }
@@ -353,7 +360,7 @@ public class OpenAiUtils {
      * @param code     代码
      * @return
      */
-    public static List<CompletionChoice> getBugFixer(String codeType, String code) {
+    public List<CompletionChoice> getBugFixer(String codeType, String code) {
         OpenAi openAi = PARMS.get("OpenAi22");
         return getAiResult(openAi, String.format(openAi.getPrompt(), codeType, code, codeType));
     }
@@ -365,7 +372,7 @@ public class OpenAiUtils {
      * @param headers 数据表头，格式如：姓名| 年龄|性别|生日
      * @return
      */
-    public static List<CompletionChoice> getFillData(int rows, String headers) {
+    public List<CompletionChoice> getFillData(int rows, String headers) {
         OpenAi openAi = PARMS.get("OpenAi23");
         return getAiResult(openAi, String.format(openAi.getPrompt(), rows, headers));
     }
@@ -377,7 +384,7 @@ public class OpenAiUtils {
      * @param programmingLanguages 语言 比如Java JavaScript
      * @return
      */
-    public static List<CompletionChoice> getProgrammingLanguageChatbot(String question, String programmingLanguages) {
+    public List<CompletionChoice> getProgrammingLanguageChatbot(String question, String programmingLanguages) {
         OpenAi openAi = PARMS.get("OpenAi24");
         return getAiResult(openAi, String.format(openAi.getPrompt(), question, programmingLanguages));
     }
@@ -388,7 +395,7 @@ public class OpenAiUtils {
      * @param question 你的问题
      * @return
      */
-    public static List<CompletionChoice> getMLChatbot(String question) {
+    public List<CompletionChoice> getMLChatbot(String question) {
         OpenAi openAi = PARMS.get("OpenAi25");
         return getAiResult(openAi, String.format(openAi.getPrompt(), question));
     }
@@ -399,7 +406,7 @@ public class OpenAiUtils {
      * @param text 清单描述
      * @return
      */
-    public static List<CompletionChoice> getListMaker(String text) {
+    public List<CompletionChoice> getListMaker(String text) {
         OpenAi openAi = PARMS.get("OpenAi26");
         return getAiResult(openAi, String.format(openAi.getPrompt(), text));
     }
@@ -410,7 +417,7 @@ public class OpenAiUtils {
      * @param text question
      * @return List<CompletionChoice>
      */
-    public static List<CompletionChoice> getTweetClassifier(String text) {
+    public List<CompletionChoice> getTweetClassifier(String text) {
         OpenAi openAi = PARMS.get("OpenAi27");
         return getAiResult(openAi, String.format(openAi.getPrompt(), text));
     }
@@ -421,7 +428,7 @@ public class OpenAiUtils {
      * @param text question
      * @return List<CompletionChoice>
      */
-    public static List<CompletionChoice> getAirportCodeExtractor(String text) {
+    public List<CompletionChoice> getAirportCodeExtractor(String text) {
         OpenAi openAi = PARMS.get("OpenAi28");
         return getAiResult(openAi, String.format(openAi.getPrompt(), text));
     }
@@ -432,7 +439,7 @@ public class OpenAiUtils {
      * @param text question
      * @return List<CompletionChoice>
      */
-    public static List<CompletionChoice> getSQL(String text) {
+    public List<CompletionChoice> getSQL(String text) {
         OpenAi openAi = PARMS.get("OpenAi29");
         return getAiResult(openAi, String.format(openAi.getPrompt(), text));
     }
@@ -444,7 +451,7 @@ public class OpenAiUtils {
      * @param text           question
      * @return List<CompletionChoice> 从下面文本中抽取邮箱和电话:\n教育行业A股IPO第一股（股票代码 003032）\n全国咨询/投诉热线：400-618-4000    举报邮箱:mc@itcast.cn
      */
-    public static List<CompletionChoice> getExtractContactInformation(String extractContent, String text) {
+    public List<CompletionChoice> getExtractContactInformation(String extractContent, String text) {
         OpenAi openAi = PARMS.get("OpenAi30");
         return getAiResult(openAi, String.format(openAi.getPrompt(), extractContent, text));
     }
@@ -457,7 +464,7 @@ public class OpenAiUtils {
      * @param code
      * @return
      */
-    public static List<CompletionChoice> getTransformationCode(String fromCodeType, String toCodeType, String code) {
+    public List<CompletionChoice> getTransformationCode(String fromCodeType, String toCodeType, String code) {
         OpenAi openAi = PARMS.get("OpenAi31");
         return getAiResult(openAi, String.format(openAi.getPrompt(), fromCodeType, toCodeType, fromCodeType, code, toCodeType));
     }
@@ -468,7 +475,7 @@ public class OpenAiUtils {
      * @param question
      * @return
      */
-    public static List<CompletionChoice> getFriendChat(String question) {
+    public List<CompletionChoice> getFriendChat(String question) {
         OpenAi openAi = PARMS.get("OpenAi32");
         return getAiResult(openAi, String.format(openAi.getPrompt(), question));
     }
@@ -479,7 +486,7 @@ public class OpenAiUtils {
      * @param text question
      * @return List<CompletionChoice>
      */
-    public static List<CompletionChoice> getMoodToColor(String text) {
+    public List<CompletionChoice> getMoodToColor(String text) {
         OpenAi openAi = PARMS.get("OpenAi33");
         return getAiResult(openAi, String.format(openAi.getPrompt(), text));
     }
@@ -491,7 +498,7 @@ public class OpenAiUtils {
      * @param code
      * @return
      */
-    public static List<CompletionChoice> getCodeDocument(String codeType, String code) {
+    public List<CompletionChoice> getCodeDocument(String codeType, String code) {
         OpenAi openAi = PARMS.get("OpenAi34");
         return getAiResult(openAi, String.format(openAi.getPrompt(), codeType, code));
     }
@@ -502,7 +509,7 @@ public class OpenAiUtils {
      * @param text 短语
      * @return
      */
-    public static List<CompletionChoice> getCreateAnalogies(String text) {
+    public List<CompletionChoice> getCreateAnalogies(String text) {
         OpenAi openAi = PARMS.get("OpenAi35");
         return getAiResult(openAi, String.format(openAi.getPrompt(), text));
     }
@@ -514,7 +521,7 @@ public class OpenAiUtils {
      * @param code
      * @return
      */
-    public static List<CompletionChoice> getCodeLine(String codeType, String code) {
+    public List<CompletionChoice> getCodeLine(String codeType, String code) {
         OpenAi openAi = PARMS.get("OpenAi36");
         return getAiResult(openAi, String.format(openAi.getPrompt(), codeType, code, codeType));
     }
@@ -525,7 +532,7 @@ public class OpenAiUtils {
      * @param topic 创作主题
      * @return
      */
-    public static List<CompletionChoice> getStory(String topic) {
+    public List<CompletionChoice> getStory(String topic) {
         OpenAi openAi = PARMS.get("OpenAi37");
         return getAiResult(openAi, String.format(openAi.getPrompt(), topic));
     }
@@ -536,7 +543,7 @@ public class OpenAiUtils {
      * @param text question
      * @return List<CompletionChoice>
      */
-    public static List<CompletionChoice> getStoryCreator(String text) {
+    public List<CompletionChoice> getStoryCreator(String text) {
         OpenAi openAi = PARMS.get("OpenAi38");
         return getAiResult(openAi, String.format(openAi.getPrompt(), text));
     }
@@ -548,7 +555,7 @@ public class OpenAiUtils {
      * @param note  记录的笔记
      * @return
      */
-    public static List<CompletionChoice> getNotesToSummary(String scene, String note) {
+    public List<CompletionChoice> getNotesToSummary(String scene, String note) {
         OpenAi openAi = PARMS.get("OpenAi39");
         return getAiResult(openAi, String.format(openAi.getPrompt(), note));
     }
@@ -559,7 +566,7 @@ public class OpenAiUtils {
      * @param topic 头脑风暴关键词
      * @return
      */
-    public static List<CompletionChoice> getIdeaGenerator(String topic) {
+    public List<CompletionChoice> getIdeaGenerator(String topic) {
         OpenAi openAi = PARMS.get("OpenAi40");
         return getAiResult(openAi, String.format(openAi.getPrompt(), topic));
     }
@@ -570,7 +577,7 @@ public class OpenAiUtils {
      * @param text 文本
      * @return
      */
-    public static List<CompletionChoice> getESRBRating(String text) {
+    public List<CompletionChoice> getESRBRating(String text) {
         OpenAi openAi = PARMS.get("OpenAi41");
         return getAiResult(openAi, String.format(openAi.getPrompt(), text));
     }
@@ -581,7 +588,7 @@ public class OpenAiUtils {
      * @param text 场景，比如 数据库软件生成大学毕业论文
      * @return
      */
-    public static List<CompletionChoice> getEssayOutline(String text) {
+    public List<CompletionChoice> getEssayOutline(String text) {
         OpenAi openAi = PARMS.get("OpenAi42");
         return getAiResult(openAi, String.format(openAi.getPrompt(), text));
     }
@@ -593,7 +600,7 @@ public class OpenAiUtils {
      * @param ingredients 美食食材
      * @return
      */
-    public static List<CompletionChoice> getRecipeCreator(String name, List<String> ingredients) {
+    public List<CompletionChoice> getRecipeCreator(String name, List<String> ingredients) {
         OpenAi openAi = PARMS.get("OpenAi43");
         StringJoiner joiner = new StringJoiner("\n");
         for (String ingredient : ingredients) {
@@ -608,7 +615,7 @@ public class OpenAiUtils {
      * @param question
      * @return
      */
-    public static List<CompletionChoice> getAiChatbot(String question) {
+    public List<CompletionChoice> getAiChatbot(String question) {
         OpenAi openAi = PARMS.get("OpenAi44");
         return getAiResult(openAi, String.format(openAi.getPrompt(), question));
     }
@@ -619,7 +626,7 @@ public class OpenAiUtils {
      * @param question
      * @return
      */
-    public static List<CompletionChoice> getMarvChatbot(String question) {
+    public List<CompletionChoice> getMarvChatbot(String question) {
         OpenAi openAi = PARMS.get("OpenAi45");
         return getAiResult(openAi, String.format(openAi.getPrompt(), question));
     }
@@ -630,7 +637,7 @@ public class OpenAiUtils {
      * @param text question
      * @return List<CompletionChoice>
      */
-    public static List<CompletionChoice> getTurnDirection(String text) {
+    public List<CompletionChoice> getTurnDirection(String text) {
         OpenAi openAi = PARMS.get("OpenAi46");
         return getAiResult(openAi, String.format(openAi.getPrompt(), text));
     }
@@ -641,7 +648,7 @@ public class OpenAiUtils {
      * @param text question
      * @return List<CompletionChoice>
      */
-    public static List<CompletionChoice> getReviewCreator(String text) {
+    public List<CompletionChoice> getReviewCreator(String text) {
         OpenAi openAi = PARMS.get("OpenAi47");
         return getAiResult(openAi, String.format(openAi.getPrompt(), text));
     }
@@ -652,7 +659,7 @@ public class OpenAiUtils {
      * @param text question
      * @return List<CompletionChoice>
      */
-    public static List<CompletionChoice> getStudyNote(String text) {
+    public List<CompletionChoice> getStudyNote(String text) {
         OpenAi openAi = PARMS.get("OpenAi48");
         return getAiResult(openAi, String.format(openAi.getPrompt(), text));
     }
@@ -663,7 +670,7 @@ public class OpenAiUtils {
      * @param text question
      * @return List<CompletionChoice>
      */
-    public static List<CompletionChoice> getInterviewQuestion(String text) {
+    public List<CompletionChoice> getInterviewQuestion(String text) {
         OpenAi openAi = PARMS.get("OpenAi49");
         System.out.println(String.format(openAi.getPrompt(), text));
         return getAiResult(openAi, String.format(openAi.getPrompt(), text));
