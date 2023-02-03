@@ -78,7 +78,7 @@ public class OpenAiUtils {
      * @return List<CompletionChoice>
      */
     public static List<CompletionChoice> getAiResult(OpenAi openAi, String prompt) {
-        String OPENAPI_TOKEN = "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";
+        String OPENAPI_TOKEN = "";
         OpenAiService service = new OpenAiService(OPENAPI_TOKEN);
         CompletionRequest.CompletionRequestBuilder builder = CompletionRequest.builder()
                 .model(openAi.getModel())
