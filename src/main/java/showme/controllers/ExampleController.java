@@ -1,17 +1,19 @@
 package showme.controllers;
 
 
+import com.theokanning.openai.completion.CompletionChoice;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.crossstore.ChangeSet;
+import org.springframework.web.bind.annotation.*;
 import showme.models.entites.AccountTypeCus;
+import showme.openAi.OpenAiUtils;
 import showme.services.EntityManagerService;
 import showme.services.serviceImpl.BaseAppDAOImpl;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/showme")
@@ -23,6 +25,7 @@ public class ExampleController {
 
     @Autowired
     private BaseAppDAOImpl baseAppDAOImpl;
+
 
     /**
      * 範例程式新增
@@ -60,5 +63,46 @@ public class ExampleController {
         System.out.println(data.get(0).getUserId());
 
 
+    }
+
+
+    /**
+     * testOpenAi
+     */
+    @PostMapping("/testOpenAi")
+    public String testOpenAi(@RequestBody Map<String, String> map) throws Exception {
+        String answerStr = null;
+        List<CompletionChoice> answer;
+        long start = System.currentTimeMillis();
+        String model = map.get("model");
+        String question = map.get("question");
+        System.out.printf("chooseModel: %s \n starting...\n question: %s \n", model, question);
+        switch (model) {
+            case "Question":
+                answer = OpenAiUtils.getQuestionAnswer(question);
+                answerStr = answer.get(0).getText().replaceAll("\\r\\n", " ");
+                break;
+            case "Conversation":
+                answer = OpenAiUtils.getFriendChat(question);
+                answerStr = answer.get(0).getText().replaceAll("\\r\\n", " ");
+                break;
+            case "CreatStory":
+                answer = OpenAiUtils.getStory(question);
+                answerStr = answer.get(0).getText().replaceAll("\\r\\n", " ");
+                break;
+            case "WhiteEyeChat":
+                answer = OpenAiUtils.getMarvChatbot(question);
+                answerStr = answer.get(0).getText().replaceAll("\\r\\n", " ");
+                break;
+            default:
+                System.out.println(" ");
+        }
+
+        if (!StringUtils.isEmpty(answerStr)) System.out.printf("answer: %s", answerStr);
+
+
+        long end = System.currentTimeMillis();
+        System.out.printf("\n 總共花了： %s 秒", (end - start) / 1000 + "\n");
+        return answerStr;
     }
 }
